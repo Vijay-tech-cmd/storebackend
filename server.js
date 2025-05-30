@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 4000
+const port = process.env.PORT || 4000
 const mongoose = require('mongoose')
 const Fakestore = require('./models/Store')
 const Counter = require('./models/Counter')
@@ -13,7 +13,10 @@ const jwt = require('jsonwebtoken')
 app.use(express.json())     //Default format
 app.use(cors())
 
-mongoose.connect('mongodb+srv://jadavijay555:Myfakeapi123@cluster0.gedbite.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
+// MongoDB connection string should be in environment variable
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://jadavijay555:Myfakeapi123@cluster0.gedbite.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
+
+mongoose.connect(MONGODB_URI)
 
 .then(() => {
     console.log('db connected')
@@ -22,7 +25,7 @@ mongoose.connect('mongodb+srv://jadavijay555:Myfakeapi123@cluster0.gedbite.mongo
     console.log(err)
 })
 
-const JWT_SECRET = "mytokken"
+const JWT_SECRET = process.env.JWT_SECRET || "mytokken"
 
 app.get('/',authMiddleware,(req,res) => {
     res.end("Hi, this is store js")
