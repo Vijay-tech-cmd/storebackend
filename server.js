@@ -11,7 +11,17 @@ const jwt = require('jsonwebtoken')
 
 
 app.use(express.json())     //Default format
-app.use(cors())
+
+// CORS configuration
+const corsOptions = {
+  origin: ['https://fakestoreproductsfrontend.netlify.app', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions))
+
 
 // MongoDB connection string should be in environment variable
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://jadavijay555:Myfakeapi123@cluster0.gedbite.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
