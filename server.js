@@ -9,35 +9,50 @@ const bcrypt = require('bcryptjs');
 const User = require('./models/Users'); // Adjust path if needed
 const jwt = require('jsonwebtoken')
 
-
 app.use(express.json())     //Default format
 
 // CORS configuration
 const corsOptions = {
-  origin: ['https://fakestoreproductsfrontend.netlify.app', 'http://localhost:5173'],
+  origin: [
+    'https://fakestoreproductsfrontend.netlify.app',
+    'http://localhost:5173',
+    'http://localhost:5174',
+    'http://127.0.0.1:5174',
+    'http://127.0.0.1:5173'
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
+  credentials: true,
+  preflightContinue: false,
+  optionsSuccessStatus: 204
 };
 
-app.use(cors(corsOptions))
+// Enable CORS for all routes
+app.use(cors(corsOptions));
 
+// Handle preflight requests
+app.options('*', cors(corsOptions));
 
 // MongoDB connection string should be in environment variable
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb+srv://jadavijay555:Myfakeapi123@cluster0.gedbite.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0'
 
-mongoose.connect(MONGODB_URI)
-
+mongoose.connect(MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+})
 .then(() => {
-    console.log('db connected')
+    console.log('MongoDB connected successfully')
 })
 .catch((err) => {
-    console.log(err)
+    console.error('MongoDB connection error:', err)
+    process.exit(1) // Exit if cannot connect to database
 })
 
 const JWT_SECRET = process.env.JWT_SECRET || "mytokken"
 
-app.get('/',(req,res) => {
+app.get('/',authMiddleware,(req,res) => {
     res.end("Hi, this is store js")
 })
 //api Create
