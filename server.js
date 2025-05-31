@@ -137,7 +137,7 @@ app.post('/register',async (req,res)=>{
       if(!match) return res.send("pswrd doesnt match")
 
         // currentUser = user
-        const token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn: '2h'})
+        const token = jwt.sign({id: user._id}, JWT_SECRET, {expiresIn: '5h'})
       
           res.send({message:"login done ",token})
   
