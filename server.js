@@ -37,7 +37,7 @@ mongoose.connect(MONGODB_URI)
 
 const JWT_SECRET = process.env.JWT_SECRET || "mytokken"
 
-app.get('/',authMiddleware,(req,res) => {
+app.get('/',(req,res) => {
     res.end("Hi, this is store js")
 })
 //api Create
